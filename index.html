@@ -275,40 +275,22 @@
       memberEl.textContent = `${currentMembers.toLocaleString()}+`;
     }, 4500);
 
-    // Handle Download Action & Simulator
+    // Download the actual APK uploaded to this GitHub repository.
     const modal = document.getElementById('downloadModal');
-    const progressBar = document.getElementById('progressBar');
     const statusText = document.getElementById('downloadStatusText');
+    const apkUrl = 'https://raw.githubusercontent.com/digitalkaushal123-ship-it/Mahadev/main/6a743efc384b50.12122736_mahadev1.apk';
 
     function handleDownload() {
+      statusText.textContent = 'Your APK download is starting...';
       modal.classList.remove('hidden');
-      progressBar.style.width = '0%';
-      statusText.textContent = 'mahadev_official_v4.2.apk is downloading...';
 
-      // Simulating download progress
-      let progress = 0;
-      const interval = setInterval(() => {
-        progress += 20;
-        progressBar.style.width = `${progress}%`;
-        if (progress >= 100) {
-          clearInterval(interval);
-          statusText.textContent = 'Download Complete! (18.6 MB)';
-          
-          // Trigger mock direct file blob download
-          triggerBlobDownload();
-        }
-      }, 250);
-    }
-
-    function triggerBlobDownload() {
-      const dummyContent = "Mahadev Official APK installer package.";
-      const blob = new Blob([dummyContent], { type: "application/vnd.android.package-archive" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = "mahadev_official_v4.2.apk";
+      const link = document.createElement('a');
+      link.href = apkUrl;
+      link.download = 'Mahadev.apk';
+      link.rel = 'noopener';
       document.body.appendChild(link);
       link.click();
-      document.body.removeChild(link);
+      link.remove();
     }
 
     function closeModal() {
