@@ -291,9 +291,7 @@
       memberEl.textContent = `${currentMembers.toLocaleString()}+`;
     }, 4500);
 
-    // Download the actual APK uploaded to this GitHub repository.
-    const modal = document.getElementById('downloadModal');
-    const statusText = document.getElementById('downloadStatusText');
+    // Start the APK download directly without showing the download modal.
     const apkUrl = 'https://raw.githubusercontent.com/digitalkaushal123-ship-it/Mahadev/main/Mahadev.apk';
 
     function handleDownload() {
@@ -301,8 +299,6 @@
       if (typeof window.fbq === 'function') {
         window.fbq('trackCustom', 'APKDownloadClick');
       }
-      statusText.textContent = 'Your APK download is starting...';
-      modal.classList.remove('hidden');
 
       const link = document.createElement('a');
       link.href = apkUrl;
@@ -312,17 +308,6 @@
       link.click();
       link.remove();
     }
-
-    function closeModal() {
-      modal.classList.add('hidden');
-    }
-
-    // Close modal on backdrop click
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        closeModal();
-      }
-    });
   </script>
 </body>
 </html>
