@@ -295,18 +295,21 @@
     const apkUrl = 'https://raw.githubusercontent.com/digitalkaushal123-ship-it/Mahadev/main/Mahadev.apk';
 
     function handleDownload() {
-      // Track the download-button action as a custom event (not a subscription).
+      // "Download" is a custom Meta Pixel event, so use trackCustom.
+      // Queue the event first, then start the APK download after a short delay.
       if (typeof window.fbq === 'function') {
-        window.fbq('track', 'Download');
+        window.fbq('trackCustom', 'Download');
       }
 
-      const link = document.createElement('a');
-      link.href = apkUrl;
-      link.download = 'Mahadev.apk';
-      link.rel = 'noopener';
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+      window.setTimeout(() => {
+        const link = document.createElement('a');
+        link.href = apkUrl;
+        link.download = 'Mahadev.apk';
+        link.rel = 'noopener';
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      }, 150);
     }
   </script>
 </body>
