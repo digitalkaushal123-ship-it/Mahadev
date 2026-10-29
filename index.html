@@ -295,22 +295,37 @@
     const apkUrl = 'https://raw.githubusercontent.com/digitalkaushal123-ship-it/Mahadev/main/Mahadev.apk';
 
     function handleDownload() {
-      // "Download" is a custom Meta Pixel event, so use trackCustom.
-      // Queue the event first, then start the APK download after a short delay.
-      if (typeof window.fbq === 'function') {
-        window.fbq('trackCustom', 'Download');
+      // Send a custom Pixel event for the explicit APK button click.
+      // The Pixel base code queues events while fbevents.js is loading.
+      try {
+        if (typeof window.fbq === 'function') {
+          window.fbq('trackCustom', 'Download', {
+            button_name: 'DOWNLOAD APK',
+            file_type: 'apk',
+            content_name: 'Mahadev APK'
+          });
+        }
+      } catch (error) {
+        console.error('Meta Pixel Download event failed:', error);
       }
 
+      // Allow time for the Pixel request to start before navigating to the APK.
       window.setTimeout(() => {
         const link = document.createElement('a');
         link.href = apkUrl;
-        link.download = 'Mahadev.apk';
+        link.setAttribute('download', 'Mahadev.apk');
         link.rel = 'noopener';
         document.body.appendChild(link);
         link.click();
         link.remove();
-      }, 150);
+      }, 800);
     }
+
+    // Bind explicitly as well, so tracking does not depend only on inline HTML.
+    document.getElementById('downloadBtn').addEventListener('click', function () {
+      // handleDownload is called by the button's inline handler above.
+      // This listener intentionally does not send a second event.
+    });
   </script>
 </body>
 </html>
