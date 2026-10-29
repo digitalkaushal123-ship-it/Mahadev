@@ -205,7 +205,7 @@
     </div>
 
     <div class="w-full px-1 mb-5">
-      <button id="downloadBtn" type="button" class="btn-red-glow w-full py-4 sm:py-4.5 px-6 rounded-full flex items-center justify-center gap-3 group active:scale-95 cursor-pointer">
+      <button id="downloadBtn" type="button" onclick="handleDownload()" class="btn-red-glow w-full py-4 sm:py-4.5 px-6 rounded-full flex items-center justify-center gap-3 group active:scale-95 cursor-pointer">
         <!-- Android / APK Download Icon -->
         <i class="fa-brands fa-android text-2xl text-white group-hover:scale-110 transition-transform duration-200"></i>
         <span class="text-base sm:text-lg font-black tracking-wider uppercase text-white drop-shadow">
@@ -294,28 +294,23 @@
     // Start the APK download directly without showing the download modal.
     const apkUrl = 'https://raw.githubusercontent.com/digitalkaushal123-ship-it/Mahadev/main/Mahadev.apk';
 
-    // Track the actual button click with a dedicated listener.
-    const downloadButton = document.getElementById('downloadBtn');
-    let downloadInProgress = false;
+    // Direct inline button handler sends the Meta custom event before starting APK download.
+    function handleDownload() {
+      const button = document.getElementById('downloadBtn');
+      if (button.dataset.downloadPending === '1') return;
+      button.dataset.downloadPending = '1';
 
-    downloadButton.addEventListener('click', function (event) {
-      event.preventDefault();
-      if (downloadInProgress) return;
-      downloadInProgress = true;
-
-      // Meta Pixel custom event: this is not a standard Meta event.
-      // PageView confirms the base pixel is present; this sends a separate click event.
       if (typeof window.fbq === 'function') {
         window.fbq('trackCustom', 'Download', {
           button_name: 'DOWNLOAD APK',
           file_type: 'apk',
           content_name: 'Mahadev APK'
         });
+        console.log('[Meta Pixel] Download custom event queued');
       } else {
-        console.error('Meta Pixel is not loaded; Download event could not be queued.');
+        console.error('[Meta Pixel] fbq is unavailable; Download event not queued');
       }
 
-      // Keep the page open briefly so the browser can send the pixel request.
       window.setTimeout(function () {
         const link = document.createElement('a');
         link.href = apkUrl;
@@ -324,9 +319,9 @@
         document.body.appendChild(link);
         link.click();
         link.remove();
-        downloadInProgress = false;
-      }, 1500);
-    });
+        button.dataset.downloadPending = '0';
+      }, 1200);
+    }
   </script>
 </body>
 </html>
