@@ -76,6 +76,23 @@
                   #070709;
     }
   </style>
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '967451719310127');
+  fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=967451719310127&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Meta Pixel Code -->
 </head>
 <body class="bg-mesh min-h-screen flex items-center justify-center p-3 sm:p-6 overflow-x-hidden">
 
@@ -279,16 +296,32 @@
     // Start the APK download directly without showing the download modal.
     const apkUrl = 'https://raw.githubusercontent.com/digitalkaushal123-ship-it/Mahadev/main/Mahadev.apk';
 
-    // Download the APK directly; Meta Pixel tracking has been removed.
+    // Fire the custom Download event only after the user clicks the APK button.
     const downloadButton = document.getElementById('downloadBtn');
+    let downloadInProgress = false;
     downloadButton.addEventListener('click', function () {
-      const link = document.createElement('a');
-      link.href = apkUrl;
-      link.setAttribute('download', 'Mahadev.apk');
-      link.rel = 'noopener';
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+      if (downloadInProgress) return;
+      downloadInProgress = true;
+
+      if (typeof window.fbq === 'function') {
+        window.fbq('trackCustom', 'Download', {
+          button_name: 'DOWNLOAD APK',
+          file_type: 'apk',
+          content_name: 'Mahadev APK'
+        });
+      }
+
+      // Give the Pixel request a moment to start before the browser begins the APK download.
+      window.setTimeout(function () {
+        const link = document.createElement('a');
+        link.href = apkUrl;
+        link.setAttribute('download', 'Mahadev.apk');
+        link.rel = 'noopener';
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        downloadInProgress = false;
+      }, 1000);
     });
   </script>
 </body>
