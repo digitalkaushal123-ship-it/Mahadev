@@ -40,6 +40,7 @@ module.exports = async function handler(req, res) {
     encodeURIComponent(pixelId) + '/events?access_token=' + encodeURIComponent(token);
   const eventId = downloadId + '_complete';
   const payload = {
+    ...(process.env.META_TEST_EVENT_CODE ? { test_event_code: process.env.META_TEST_EVENT_CODE } : {}),
     data: [{
       event_name: 'APKDownloadCompleted',
       event_time: Math.floor(Date.now() / 1000),
