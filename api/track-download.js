@@ -1,11 +1,8 @@
 // Vercel Serverless Function: called by the browser only after the full
 // APK response body has been received. This is not proof of Android installation.
-const crypto = require('crypto');
-
 function getCookie(req, name) {
   const raw = req.headers.cookie || '';
-  const escaped = name.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\$&');
-  const match = raw.match(new RegExp('(?:^|;\\s*)' + escaped + '=([^;]*)'));
+  const match = raw.match(new RegExp('(?:^|;\\s*)' + name + '=([^;]*)'));
   return match ? decodeURIComponent(match[1]) : undefined;
 }
 
