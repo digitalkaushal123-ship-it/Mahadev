@@ -36,7 +36,6 @@ async function sendMetaEvent(req, eventName, eventId) {
     encodeURIComponent(pixelId) + '/events?access_token=' + encodeURIComponent(token);
 
   const payload = {
-    ...(process.env.META_TEST_EVENT_CODE ? { test_event_code: process.env.META_TEST_EVENT_CODE } : {}),
     data: [{
       event_name: eventName,
       event_time: Math.floor(Date.now() / 1000),
