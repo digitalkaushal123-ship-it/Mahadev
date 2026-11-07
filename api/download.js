@@ -4,7 +4,7 @@ const APK_URL = 'https://raw.githubusercontent.com/digitalkaushal123-ship-it/Mah
 
 function getCookie(req, name) {
   const raw = req.headers.cookie || '';
-  const match = raw.match(new RegExp('(?:^|;\\s*)' + name.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\$&') + '=([^;]*)'));
+  const match = raw.match(new RegExp('(?:^|;\\s*)' + name + '=([^;]*)'));
   return match ? decodeURIComponent(match[1]) : undefined;
 }
 
