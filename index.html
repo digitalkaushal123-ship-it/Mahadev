@@ -325,12 +325,24 @@
         // Send the completion signal server-side. Do not block saving the APK if
         // analytics is temporarily unavailable.
         try {
-          await fetch('/api/track-download', {
+          const trackingResponse = await fetch('/api/track-download', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             keepalive: true,
             body: JSON.stringify({ download_id: downloadId })
           });
+
+          if (!trackingResponse.ok) {
+            throw new Error('Download tracking failed: ' + trackingResponse.status);
+          }
+
+          // Browser Pixel and server CAPI use the exact same event name + ID.
+          // Meta deduplicates them into one conversion.
+          if (typeof window.fbq === 'function') {
+            window.fbq('trackCustom', 'APKDownloadComplete', {}, {
+              eventID: downloadId
+            });
+          }
         } catch (trackingError) {
           console.warn('Download completion tracking failed:', trackingError);
         }
