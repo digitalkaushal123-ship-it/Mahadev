@@ -78,13 +78,6 @@ module.exports = async function handler(req, res) {
       return res.status(502).json({ error: 'APK source unavailable' });
     }
 
-    // This is a start/request event, not an install event.
-    try {
-      await sendMetaEvent(req, 'APKDownloadStarted', downloadId + '_start');
-    } catch (error) {
-      console.error('Could not send download-start event:', error);
-    }
-
     const bytes = Buffer.from(await apkResponse.arrayBuffer());
     res.setHeader('Content-Type', 'application/vnd.android.package-archive');
     res.setHeader('Content-Disposition', 'attachment; filename="Mahadev.apk"');
