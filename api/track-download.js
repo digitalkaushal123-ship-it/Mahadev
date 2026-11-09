@@ -38,10 +38,10 @@ module.exports = async function handler(req, res) {
   const version = process.env.META_GRAPH_API_VERSION || 'v23.0';
   const endpoint = 'https://graph.facebook.com/' + version + '/' +
     encodeURIComponent(pixelId) + '/events?access_token=' + encodeURIComponent(token);
-  const eventId = downloadId + '_complete';
+  const eventId = downloadId;
   const payload = {
     data: [{
-      event_name: 'APKDownloadCompleted',
+      event_name: 'APKDownloadComplete',
       event_time: Math.floor(Date.now() / 1000),
       event_id: eventId,
       action_source: 'website',
@@ -62,7 +62,7 @@ module.exports = async function handler(req, res) {
       console.error('Meta CAPI completion event failed:', response.status, result);
       return res.status(502).json({ error: 'Meta did not accept the event' });
     }
-    return res.status(200).json({ ok: true, event: 'APKDownloadCompleted', event_id: eventId });
+    return res.status(200).json({ ok: true, event: 'APKDownloadComplete', event_id: eventId });
   } catch (error) {
     console.error('Meta CAPI completion request failed:', error);
     return res.status(502).json({ error: 'Meta CAPI request failed' });
