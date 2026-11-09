@@ -48,7 +48,10 @@ module.exports = async function handler(req, res) {
       event_source_url: req.headers.referer || 'https://mahadev-sand-one.vercel.app/',
       user_data: userData,
       custom_data: { content_name: 'Mahadev APK', file_type: 'apk' }
-    }]
+    }],
+    ...(process.env.META_TEST_EVENT_CODE
+      ? { test_event_code: process.env.META_TEST_EVENT_CODE }
+      : {})
   };
 
   try {
